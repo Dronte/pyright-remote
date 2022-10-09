@@ -1,0 +1,35 @@
+{
+  "include": [
+     "greeting/**"
+  ],
+
+  "exclude": [
+     "venv",
+     "**/__pycache__",
+     "**/.git",
+  ],
+
+  "ignore": [
+  ],
+
+  "extraPaths": [],
+  "defineConstant": {
+  },
+  "useLibraryCodeForTypes": false,
+  "venvPath": ".",
+  "venv": "venv",
+
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+
+  "pythonVersion": "3.9",
+  "pythonPlatform": "Linux",
+
+  "executionEnvironments": [
+    { 
+      "root": ".",
+      "extraPaths": [
+      ]
+    }
+  ]
+}
