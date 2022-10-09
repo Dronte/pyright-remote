@@ -12,7 +12,7 @@ The steps described here assume that both your remote and local machine are runn
 Other operation systems are likely may be set up using this approach as well, but will require some modifications. I've no experience with that.
 
 
-# Step 1: Getting pyright.
+# Step 1: Getting pyright
 
 This section describes installing pyright the way I recommend to do it for our purpuses.
 There multiple other ways, you can use them, if you want.
@@ -56,7 +56,7 @@ Verify that `pyright.sh` runs successfully by running `$HOME/.pyright-install/py
 line most likely followed by `No source files found.`. 
 
 
-# Step 3: Making pyright working.
+# Step 3: Making pyright working
 After the above step you must be able to run pyright with the output looking like
 ```
 Searching for source files
@@ -85,7 +85,7 @@ You should get a prompt
 Enter program to execute (or <host>:<port>): 
 ```
 
-# Step 4: connecti eglot to pyright.
+# Step 4: connecti eglot to pyright
 The problem with pyright-langserver is that it acts like a tcp-client, not the server. When it starts, and all the time it's running,
 it requires someone to read another side of the socket.
 We solve this problem by having a simple intermediate proxy, that passes all messages from pyright-langserver to eglot, and vise-versa.
@@ -165,7 +165,7 @@ put in the project root.
 
 After this point project identification worked fine for me.
 
-# Step 7: Saving port settings specific to the project.
+# Step 7: Saving port settings specific to the project
 
 Emacs has [dir-locals](https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html)
 feature that allows to set specific variables on opened files by reading specific `.dir-locals.el` file.
