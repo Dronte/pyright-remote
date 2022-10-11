@@ -74,7 +74,7 @@ Checkout the example project and config file in this repo FIXME. The output shou
 greeter.py:12:16 - error: Operator "+" not supported for types "str" and "int"
 ```
 This is essential that you make pyright commandline version working before moving forward to using pyright-langserver.
-The latter is extreemly hard to troubleshoot.
+The latter is extremely hard to troubleshoot.
 
 # Step 3: checking eglot.
 I assume you have [eglot] (https://github.com/joaotavora/eglot "github") installed on your local emacs. 
