@@ -5,16 +5,16 @@ Instructions on setting up pyright on remote server
 
 This repo contains guide on setting [Microsoft's pyright](https://github.com/microsoft/pyright "pyright's github")
 lsp server on a remote dev machine (e.g. the machine where the source code is hosted and modified)
-and using it on local machine (e.g. the machine where editor is launched and used) as emacs's
+and using it on local machine (e.g. the machine where an editor is launched and used) as emacs's
 [eglot](https://github.com/joaotavora/eglot "eglot") backend.
 
-The steps described here assume that both your remote and local machine are running something nix-like (e.g. mac, linux, etc).
+The steps described here assume that both your remote and local machine are running something nix-like (e.g. mac, linux, etc.).
 Other operation systems are likely may be set up using this approach as well, but will require some modifications. I've no experience with that.
 
 
 # Step 1: Getting pyright
 
-This section describes installing pyright the way I recommend to do it for our purpuses.
+This section describes installing pyright the way I recommend to do it for our purposes.
 There multiple other ways, you can use them, if you want.
 
 Pyright is implemented using [typescript](https://en.wikipedia.org/wiki/TypeScript "wikipedia")
@@ -24,8 +24,8 @@ To manage node versions I use [nvm](https://github.com/nvm-sh/nvm "nvm").
 There is a pip package called `pyright` that installs pyright which I don't recommend to use.
 
 [Install](https://github.com/nvm-sh/nvm "nvm") it as described in the doc.
-When your nvm installation works install node version. Version 16 worked for me, but not the later ones. Install it by running: `nvm install 16`
-This will install the latest avaliable (`v16.17.1` at the moment of writing this lines. Would be used further as an example)
+When your nvm installation works, install node. Node version 16 worked for me, but not the later ones. Install it by running: `nvm install 16`
+This will install the latest available (`v16.17.1` at the moment of writing this lines. Would be used further as an example)
 version of node.js v16 and create appropriate folder `~/.nvm/versions/node/v16.17.1/`.
 You can check it up by running `~/.nvm/versions/node/v16.17.1/bin/node -v` which should print you `v16.17.1`.
 It should also provide you with an installed npm [node.js](https://en.wikipedia.org/wiki/Npm_(software) "wikipedia") in the same directory.
@@ -53,7 +53,7 @@ Symbols `$@` in this sh script mean that all commandline arguments provided to t
 Make both files executable by running `chmod +x pyright.sh ; chmod +x pyright-langserver.sh`
 
 Verify that `pyright.sh` runs successfully by running `$HOME/.pyright-install/pyright.sh` from any directory. You must see `Searching for source files` 
-line most likely followed by `No source files found.`. 
+line, most likely followed by `No source files found.`. 
 
 
 # Step 3: Making pyright working
@@ -61,7 +61,7 @@ After the above step you must be able to run pyright with the output looking lik
 ```
 Searching for source files
 No source files found.
-```.
+```
 
 Chdir to the root of your python project, refer to pyright's cli and 
 [cli](https://github.com/microsoft/pyright/blob/main/docs/command-line.md#pyright-command-line-options "doc")
@@ -89,7 +89,7 @@ Enter program to execute (or <host>:<port>):
 The problem with pyright-langserver is that it acts like a tcp-client, not the server. When it starts, and all the time it's running,
 it requires someone to read another side of the socket.
 We solve this problem by having a simple intermediate proxy, that passes all messages from pyright-langserver to eglot, and vise-versa.
-Therefore it uses two ports, the `server port` that pyright-langserver binds to, and `client port` which eglot will bind two.
+Therefore, it uses two ports, the `server port` that pyright-langserver binds to, and `client port` which eglot will bind two.
 I'll use 9999 as server port and 10000 as client port along this guide.
 
 Start the proxy server on your remote machine.
@@ -97,12 +97,12 @@ Start the proxy server on your remote machine.
 python tcp_pipe.py  --server-port 9999 --client-port 10000
 ```
 
-start pyright-langserver on your remote machine.
+Start pyright-langserver on your remote machine.
 ``` shell
  ~/.pyright-install/pyright-langserver.sh --verbose  -p pyrightconfig.good.json  --socket=9999
  ```
 
-Open a ssh tunnel from your local machine to your remote machine.
+Open an ssh tunnel from your local machine to your remote machine.
 ```
 ssh -L 10000:localhost:10000 your.remote.machine
 ```
@@ -113,9 +113,9 @@ It should work.
 # Step 5: [May be optional] setup projectile project root
 
 Eglot uses project.el to bind files to projects, and projects are bound to an lsp-server.
-I use [doom emacs](https://github.com/doomemacs/doomemacs "github") which uses projectile.el project managment package.
+I use [doom emacs](https://github.com/doomemacs/doomemacs "github") which uses projectile.el project management package.
 
-The solution to bind them togeter was found at 
+The solution to bind them together was found at 
 https://github.com/bbatsov/projectile/issues/1591#issuecomment-903042091
 
 I put this code to my config
@@ -194,21 +194,21 @@ Sometimes manual reconnect using `M-x eglot-reconnect` or `M-x eglot` is require
 
 # Multiple clients support
 
-Currently tcp proxy supports only one client at a time.
+Currently, tcp proxy supports only one client at a time.
 However, editing one project from different editors may be a reasonable thing to do.
-Adding support of multiple clients to a proxy to parse each incomming json-rpc request.
+Adding support for multiple clients to a proxy to parse each incoming json-rpc request.
 In consists of a simple `Content-Length` header and json body.
-Each request has an id, and server's response contains an id of request server is responding to.
-In practice id's are increasing integer numbers starting from 1, so they can easily intersect in requests from different clients.
+Each request has an id, and server's response contains an id of the request server is responding to.
+In practice, id's are increasing integer numbers starting from 1, so they can easily intersect in requests from different clients.
 
-After pasing the request proxy would be able to generate some unique request id, and repace it's original request id.
-For each new request id, proxy must remember it's orignal client.
-After reciving a response from server, it must determine which client should recive this response.
+After parsing the request proxy would be able to generate some unique request id, and replace it's original request id.
+For each new request id, proxy must remember it's original client.
+After recieving a response from server, it must determine which client should recieve this response.
 
-This support is not planned to be add in the future.
+This support is currently not planned to be add in the future.
 
 # Other clients
 
-This guide basically consists of two parts: setting up pyright-langserver + proxy, and setting up emacs.
+This guide basically consists of two parts: setting up pyright-langserver + proxy, and setting up emacs + eglot.
 If you have an instruction for other editors and willing to add it here, open an issue or make a PR, or both.
 
