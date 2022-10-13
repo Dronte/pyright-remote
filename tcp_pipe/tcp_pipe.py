@@ -2,7 +2,7 @@ import argparse
 import asyncio
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging
 
 
 class PortListner:
@@ -16,7 +16,7 @@ class PortListner:
         return coro
 
     async def accept_server_connection(self, reader, writer):
-        logger.info('Client connected on port ', self.port)
+        logger.info('Client connected on port %d', self.port)
         self.reader = reader
         self.writer = writer
         self.connected.set()
@@ -38,9 +38,10 @@ async def pipe(source, destination):
     try:
         while not source.reader.at_eof():
             data = await source.reader.read(2048)
+            logger.debug('%d -> %d: %s', source.port, destination.port, data)
             destination.writer.write(data)
     except Exception as e:
-        pass
+        logger.exception(e)
 
 
 async def async_main(loop, args):
@@ -71,12 +72,21 @@ def get_argparser():
     argparser = argparse.ArgumentParser(description='Simple tcp pipe proxy')
     argparser.add_argument('--server-port', type=int, required=True, help='Port, the server will connect to')
     argparser.add_argument('--client-port', type=int, required=True, help='Port, the client will connect to')
+    argparser.add_argument('--log-level', default='INFO', help='Log level. DEBUG will log transfered data.')
     return argparser
+
+
+def setup_logging(args):
+    logging.basicConfig(
+        format='%(asctime)s - %(message)s',
+        level=logging.getLevelName(args.log_level.upper())
+    )
 
 
 async def main():
     argparser = get_argparser()
     args = argparser.parse_args()
+    setup_logging(args)
     loop = asyncio.get_running_loop()
     await async_main(loop, args)
 
